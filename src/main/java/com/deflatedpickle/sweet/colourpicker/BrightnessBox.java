@@ -17,11 +17,11 @@ public class BrightnessBox extends GLCanvas {
         this.setCurrent();
         GL.createCapabilities();
 
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
+
         GL11.glViewport(0, 0, 180, 180);
         GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-        GL11.glColor3f(0.0f, 0.0f, 0.0f);
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
 
         float red = 0.0f;
         float green = 1.0f;

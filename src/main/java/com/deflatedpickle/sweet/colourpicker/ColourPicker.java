@@ -9,16 +9,21 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ColourPicker extends Composite {
     BrightnessBox brightnessBox = new BrightnessBox(this, SWT.BORDER);
-    // private HueBar hueBar = new HueBar(this, SWT.BORDER);
+    private HueBar hueBar = new HueBar(this, SWT.BORDER);
 
     public ColourPicker(Composite parent, int style) {
         super(parent, style);
-        this.setLayout(new GridLayout());
+        this.setLayout(new GridLayout(2, false));
 
-        GridData gridData = new GridData();
-        gridData.widthHint = 180;
-        gridData.heightHint = 180;
-        brightnessBox.setLayoutData(gridData);
+        GridData brightnessGridData = new GridData();
+        brightnessGridData.widthHint = 180;
+        brightnessGridData.heightHint = 180;
+        brightnessBox.setLayoutData(brightnessGridData);
+
+        GridData hueGridData = new GridData();
+        hueGridData.widthHint = 20;
+        hueGridData.heightHint = 180;
+        hueBar.setLayoutData(hueGridData);
     }
 
     public static void main(String[] args) {
