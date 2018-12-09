@@ -38,39 +38,38 @@ public class HueBar extends ScalingGLCanvas {
 
                     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
-                    // TODO: Maybe only one line can be drawn, and the view can be stretched horizontally?
-                    IntStream.range(-getClientArea().width, getClientArea().width).boxed().sorted(Collections.reverseOrder()).forEachOrdered(i -> {
-                        float flo = i.floatValue() / getClientArea().width;
+                    float flo = 0f;
 
-                        GL11.glBegin(GL11.GL_LINE_STRIP);
+                    GL11.glLineWidth(getClientArea().width);
+                    GL11.glBegin(GL11.GL_LINE_STRIP);
 
-                        GL11.glColor3f(1.0f, 0.0f, 0.0f); // Red
-                        GL11.glVertex2f(flo, 1); // Top Left
+                    GL11.glColor3f(1.0f, 0.0f, 0.0f); // Red
+                    GL11.glVertex2f(flo, 1); // Top Left
 
-                        GL11.glColor3f(1.0f, 0.0f, 1.0f); // Purple
-                        GL11.glVertex2f(flo, 0.8f);
+                    GL11.glColor3f(1.0f, 0.0f, 1.0f); // Purple
+                    GL11.glVertex2f(flo, 0.8f);
 
-                        GL11.glColor3f(0.0f, 0.0f, 1.0f); // Blue
-                        GL11.glVertex2f(flo, 0.4f);
+                    GL11.glColor3f(0.0f, 0.0f, 1.0f); // Blue
+                    GL11.glVertex2f(flo, 0.4f);
 
-                        GL11.glColor3f(0.0f, 1.0f, 1.0f); // Cyan
-                        GL11.glVertex2f(flo, 0.2f);
+                    GL11.glColor3f(0.0f, 1.0f, 1.0f); // Cyan
+                    GL11.glVertex2f(flo, 0.2f);
 
-                        GL11.glColor3f(0.0f, 1.0f, 0.0f); // Green
-                        GL11.glVertex2f(flo, -0.0f);
+                    GL11.glColor3f(0.0f, 1.0f, 0.0f); // Green
+                    GL11.glVertex2f(flo, -0.0f);
 
-                        GL11.glColor3f(1.0f, 1.0f, 0.0f); // Yellow
-                        GL11.glVertex2f(flo, -0.4f);
+                    GL11.glColor3f(1.0f, 1.0f, 0.0f); // Yellow
+                    GL11.glVertex2f(flo, -0.4f);
 
-                        GL11.glColor3f(1.0f, 0.0f, 0.0f); // Red
-                        GL11.glVertex2f(flo, -1f); // Bottom Left
+                    GL11.glColor3f(1.0f, 0.0f, 0.0f); // Red
+                    GL11.glVertex2f(flo, -1f); // Bottom Left
 
-                        GL11.glEnd();
-                    });
+                    GL11.glEnd();
 
                     // Pointer
                     float scalingFixtureY = getClientArea().height / 180f;
 
+                    GL11.glLineWidth(1f);
                     GL11.glBegin(GL11.GL_LINE_LOOP);
                     GL11.glColor3i(1, 1, 1);
                     GL11.glVertex2f(pointerLocation[0] - 1f, -pointerLocation[1] - 0.35f / scalingFixtureY); // Bottom Left
