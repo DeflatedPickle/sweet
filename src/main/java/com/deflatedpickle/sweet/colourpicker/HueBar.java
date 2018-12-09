@@ -1,30 +1,35 @@
 package com.deflatedpickle.sweet.colourpicker;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.opengl.GLCanvas;
-import org.eclipse.swt.opengl.GLData;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Collections;
 import java.util.stream.IntStream;
 
-public class HueBar extends GLCanvas {
-    private HueBar canvas = this;
-    private static GLData glData = new GLData();
+public class HueBar extends ScalingGLCanvas {
+    private float[] pointerLocation = new float[] {0, 0};
+
+    float red = 1f;
+    float green = 0f;
+    float blue = 0f;
 
     public HueBar(Composite parent, int style) {
-        super(parent, style | SWT.NO_REDRAW_RESIZE, glData);
+        super(parent, style);
 
         this.setCurrent();
         GL.createCapabilities();
 
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
+        // min - 0.65f, max = -1.25f
 
-        GL11.glViewport(0, 0, 38, 180);
-        GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        this.addListener(SWT.Resize, event -> resize());
+
+        GL11.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         this.getDisplay().asyncExec(new Runnable() {
             public void run() {
@@ -34,8 +39,8 @@ public class HueBar extends GLCanvas {
                     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
                     // TODO: Maybe only one line can be drawn, and the view can be stretched horizontally?
-                    IntStream.range(0, 30).boxed().sorted(Collections.reverseOrder()).forEachOrdered(i -> {
-                        float flo = -i.floatValue() / 30;
+                    IntStream.range(-getClientArea().width, getClientArea().width).boxed().sorted(Collections.reverseOrder()).forEachOrdered(i -> {
+                        float flo = i.floatValue() / getClientArea().width;
 
                         GL11.glBegin(GL11.GL_LINE_STRIP);
 
@@ -62,6 +67,17 @@ public class HueBar extends GLCanvas {
 
                         GL11.glEnd();
                     });
+
+                    // Pointer
+                    float scalingFixtureY = getClientArea().height / 180f;
+
+                    GL11.glBegin(GL11.GL_LINE_LOOP);
+                    GL11.glColor3i(1, 1, 1);
+                    GL11.glVertex2f(pointerLocation[0] - 1f, -pointerLocation[1] - 0.35f / scalingFixtureY); // Bottom Left
+                    GL11.glVertex2f(pointerLocation[0] + 1f, -pointerLocation[1] - 0.35f / scalingFixtureY); // Bottom Right
+                    GL11.glVertex2f(pointerLocation[0] + 1f, -pointerLocation[1] - 0.25f / scalingFixtureY); // Top Right
+                    GL11.glVertex2f(pointerLocation[0] - 1f, -pointerLocation[1] - 0.25f / scalingFixtureY); // Top Left
+                    GL11.glEnd();
 
                     canvas.swapBuffers();
                     getDisplay().asyncExec(this);
