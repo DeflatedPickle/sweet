@@ -1,6 +1,8 @@
 package com.deflatedpickle.sweet.colourpicker;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -9,23 +11,20 @@ import org.eclipse.swt.widgets.Display;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
-import java.util.Collections;
-import java.util.stream.IntStream;
-
 public class HueBar extends ScalingGLCanvas {
-    private float[] pointerLocation = new float[] {0, 0};
+    private float[] pointerLocation = new float[] {0, -1.25f};
 
     float red = 1f;
     float green = 0f;
     float blue = 0f;
+
+    private boolean followMouse = false;
 
     public HueBar(Composite parent, int style) {
         super(parent, style);
 
         this.setCurrent();
         GL.createCapabilities();
-
-        // min - 0.65f, max = -1.25f
 
         this.addListener(SWT.Resize, event -> resize());
 
@@ -83,5 +82,46 @@ public class HueBar extends ScalingGLCanvas {
                 }
             }
         });
+
+        // Bottom - 0.65f | Top = -1.25f (OpenGL)
+        // Bottom - 180   | Top = 0      (Canvas)
+        this.addMouseMoveListener(e -> {
+            if (this.isOverHandle()) {
+                this.setCursor(new Cursor(this.getDisplay(), SWT.CURSOR_HAND));
+            }
+            else {
+                this.setCursor(new Cursor(this.getDisplay(), SWT.CURSOR_ARROW));
+            }
+        });
+
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseDoubleClick(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseDown(MouseEvent e) {
+                // TODO: Make the slider follow the mouse
+                if (isOverHandle()) {
+                    followMouse = true;
+                }
+            }
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                // Make the slider stop following the mouse
+                followMouse = false;
+            }
+        });
+    }
+
+    private boolean isOverHandle() {
+        Rectangle clientArea = this.getClientArea();
+        Point location = this.getLocation();
+        Rectangle newLocation = new Rectangle(location.x - (clientArea.width / 4), 0, clientArea.width, 10);
+
+        Point cursorLocation = Display.getCurrent().getFocusControl().toControl(Display.getCurrent().getCursorLocation());
+
+        return newLocation.contains(cursorLocation.x, cursorLocation.y);
     }
 }
