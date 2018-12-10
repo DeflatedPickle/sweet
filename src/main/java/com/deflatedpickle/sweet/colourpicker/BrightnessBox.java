@@ -1,21 +1,30 @@
 package com.deflatedpickle.sweet.colourpicker;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.opengl.GL;
 
 public class BrightnessBox extends ScalingGLCanvas {
+    // Bottom = 0.65f | Top   = -1.25f (OpenGL)
+    // Left   = -0.9f | Right = 1f
+    // Bottom = 180   | Top   = 0      (Canvas)
+    private float[] pointerLocation = new float[] {1f, -1.25f};
+
     private float red;
     private float green;
     private float blue;
 
+    private boolean followMouse = false;
+
     private boolean isFirst = true;
 
     public HueBar hueBar;
-
-    private Point pointerLocation = new Point(0, 0);
 
     public BrightnessBox(Composite parent, int style) {
         super(parent, style);
@@ -63,10 +72,10 @@ public class BrightnessBox extends ScalingGLCanvas {
 
                     GL11.glBegin(GL11.GL_LINE_LOOP);
                     GL11.glColor3i(1, 1, 1);
-                    GL11.glVertex2f(pointerLocation.x, -pointerLocation.y - 0.35f / scalingFixtureY); // Bottom Left
-                    GL11.glVertex2f(pointerLocation.x + -0.09f / scalingFixtureX, -pointerLocation.y - 0.35f / scalingFixtureY); // Bottom Right
-                    GL11.glVertex2f(pointerLocation.x + -0.09f / scalingFixtureX, -pointerLocation.y - 0.25f / scalingFixtureY); // Top Right
-                    GL11.glVertex2f(pointerLocation.x, -pointerLocation.y - 0.25f / scalingFixtureY); // Top Left
+                    GL11.glVertex2f(pointerLocation[0], -pointerLocation[1] - 0.35f / scalingFixtureY); // Bottom Left
+                    GL11.glVertex2f(pointerLocation[0] + -0.09f / scalingFixtureX, -pointerLocation[1] - 0.35f / scalingFixtureY); // Bottom Right
+                    GL11.glVertex2f(pointerLocation[0] + -0.09f / scalingFixtureX, -pointerLocation[1] - 0.25f / scalingFixtureY); // Top Right
+                    GL11.glVertex2f(pointerLocation[0], -pointerLocation[1] - 0.25f / scalingFixtureY); // Top Left
                     GL11.glEnd();
 
                     canvas.swapBuffers();
@@ -74,5 +83,44 @@ public class BrightnessBox extends ScalingGLCanvas {
                 }
             }
         });
+
+        this.addMouseMoveListener(e -> {
+            if (this.isOverHandle()) {
+                this.setCursor(new Cursor(this.getDisplay(), SWT.CURSOR_HAND));
+            }
+            else {
+                this.setCursor(new Cursor(this.getDisplay(), SWT.CURSOR_ARROW));
+            }
+        });
+
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseDoubleClick(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseDown(MouseEvent e) {
+                // TODO: Make the slider follow the mouse
+                if (isOverHandle()) {
+                    followMouse = true;
+                }
+            }
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                // Make the slider stop following the mouse
+                followMouse = false;
+            }
+        });
+    }
+
+    private boolean isOverHandle() {
+        Rectangle clientArea = this.getClientArea();
+        Point location = this.getLocation();
+        Rectangle newLocation = new Rectangle(location.x + clientArea.width - 15, location.y - 5, 10, 10);
+
+        Point cursorLocation = Display.getCurrent().getFocusControl().toControl(Display.getCurrent().getCursorLocation());
+
+        return newLocation.contains(cursorLocation.x, cursorLocation.y);
     }
 }

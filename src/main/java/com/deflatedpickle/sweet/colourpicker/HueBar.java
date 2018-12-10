@@ -12,6 +12,8 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 public class HueBar extends ScalingGLCanvas {
+    // Bottom = 0.65f | Top = -1.25f (OpenGL)
+    // Bottom = 180   | Top = 0      (Canvas)
     private float[] pointerLocation = new float[] {0, -1.25f};
 
     float red = 1f;
@@ -83,8 +85,6 @@ public class HueBar extends ScalingGLCanvas {
             }
         });
 
-        // Bottom - 0.65f | Top = -1.25f (OpenGL)
-        // Bottom - 180   | Top = 0      (Canvas)
         this.addMouseMoveListener(e -> {
             if (this.isOverHandle()) {
                 this.setCursor(new Cursor(this.getDisplay(), SWT.CURSOR_HAND));
@@ -118,7 +118,7 @@ public class HueBar extends ScalingGLCanvas {
     private boolean isOverHandle() {
         Rectangle clientArea = this.getClientArea();
         Point location = this.getLocation();
-        Rectangle newLocation = new Rectangle(location.x - (clientArea.width / 4), 0, clientArea.width, 10);
+        Rectangle newLocation = new Rectangle(location.x - (clientArea.width / 4), location.y - 5, clientArea.width, 10);
 
         Point cursorLocation = Display.getCurrent().getFocusControl().toControl(Display.getCurrent().getCursorLocation());
 
