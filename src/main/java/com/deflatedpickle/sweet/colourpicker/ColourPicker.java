@@ -9,24 +9,44 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public class ColourPicker extends Composite {
-    BrightnessBox brightnessBox = new BrightnessBox(this, SWT.BORDER);
-    HueBar hueBar = new HueBar(this, SWT.BORDER);
+    private AbstractBrightness brightness;
+    private AbstractHue hue;
 
-    public ColourPicker(Composite parent, int style) {
+    public enum BrightnessType {
+        BOX
+    }
+
+    public enum HueType {
+        BAR
+    }
+
+    public ColourPicker(Composite parent, int style, BrightnessType brightnessType, HueType hueType) {
         super(parent, style);
         this.setLayout(new GridLayout(2, false));
 
-        brightnessBox.hueBar = hueBar;
+        switch (brightnessType) {
+            case BOX:
+                brightness = new BrightnessBox(this, SWT.BORDER);
+                break;
+        }
+
+        switch (hueType) {
+            case BAR:
+                hue = new HueBar(this, SWT.BORDER);
+                break;
+        }
+
+        brightness.hueBar = hue;
 
         GridData brightnessGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         brightnessGridData.widthHint = 180;
         brightnessGridData.heightHint = 180;
-        brightnessBox.setLayoutData(brightnessGridData);
+        brightness.setLayoutData(brightnessGridData);
 
         GridData hueGridData = new GridData(SWT.CENTER, SWT.FILL, false, true);
         hueGridData.widthHint = 20;
         hueGridData.heightHint = 180;
-        hueBar.setLayoutData(hueGridData);
+        hue.setLayoutData(hueGridData);
     }
 
     public static void main(String[] args) {
@@ -34,7 +54,7 @@ public class ColourPicker extends Composite {
         Shell shell = new Shell(display);
         shell.setLayout(new FillLayout());
 
-        ColourPicker colourPicker = new ColourPicker(shell, SWT.NONE);
+        ColourPicker colourPicker = new ColourPicker(shell, SWT.NONE, BrightnessType.BOX, HueType.BAR);
         colourPicker.pack();
 
         shell.pack();

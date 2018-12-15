@@ -7,7 +7,8 @@ import org.eclipse.swt.opengl.GLData;
 import org.eclipse.swt.widgets.Composite;
 import org.lwjgl.opengl.GL11;
 
-public class ScalingGLCanvas extends GLCanvas {
+
+abstract class ScalingGLCanvas extends GLCanvas {
     ScalingGLCanvas canvas = this;
     private static GLData glData = new GLData();
 
