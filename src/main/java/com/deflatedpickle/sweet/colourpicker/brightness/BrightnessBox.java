@@ -1,30 +1,19 @@
 package com.deflatedpickle.sweet.colourpicker.brightness;
 
 import com.deflatedpickle.sweet.colourpicker.hue.AbstractHue;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
 import org.lwjgl.opengl.*;
 
 public class BrightnessBox extends AbstractBrightness {
-    // Bottom = 0.65f | Top   = -1.25f (OpenGL)
-    // Left   = -0.9f | Right = 1f
-    // Bottom = 180   | Top   = 0      (Canvas)
-    private float[] pointerLocation = new float[] {1f, -1.25f};
-
     public BrightnessBox(Composite parent, int style) {
         super(parent, style);
+
+        pointerLocation = new float[]{1f, -1.25f};
     }
 
     @Override
     public boolean isOverHandle() {
-        Rectangle clientArea = this.getClientArea();
-        Point location = this.getLocation();
-        Rectangle newLocation = new Rectangle(location.x + clientArea.width - 15, location.y - 5, 10, 10);
-
-        Point cursorLocation = Display.getCurrent().getFocusControl().toControl(Display.getCurrent().getCursorLocation());
-
-        return newLocation.contains(cursorLocation.x, cursorLocation.y);
+        return false;
     }
 
     public static void drawCanvas(AbstractHue hue, float red, float green, float blue) {

@@ -213,7 +213,7 @@ public class ColourPicker extends Composite {
         Shell shell = new Shell(display);
         shell.setLayout(new FillLayout());
 
-        ColourPicker colourPicker = new ColourPicker(shell, SWT.NONE, BrightnessShape.ISOSCELES_TRIANGLE, HueShape.WHEEL, true);
+        ColourPicker colourPicker = new ColourPicker(shell, SWT.NONE, BrightnessShape.BOX, HueShape.BAR, false);
         colourPicker.pack();
 
         shell.pack();

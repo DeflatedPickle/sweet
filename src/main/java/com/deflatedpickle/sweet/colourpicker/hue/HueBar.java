@@ -1,34 +1,20 @@
 package com.deflatedpickle.sweet.colourpicker.hue;
 
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class HueBar extends AbstractHue {
-    // Bottom = 0.65f | Top = -1.25f (OpenGL)
-    // Bottom = 180   | Top = 0      (Canvas)
-    private float[] pointerLocation = new float[]{0, -1.25f};
-
     public HueBar(Composite parent, int style) {
         super(parent, style);
+
+        pointerLocation = new float[]{0, -1.25f};
 
         this.red = 1f;
     }
 
     @Override
     public boolean isOverHandle() {
-        Rectangle clientArea = this.getClientArea();
-        Point location = this.getLocation();
-        Rectangle newLocation = new Rectangle(location.x - (clientArea.width / 4), location.y - 5, clientArea.width, 10);
-
-        Point cursorLocation = Display.getCurrent().getFocusControl().toControl(Display.getCurrent().getCursorLocation());
-
-        return newLocation.contains(cursorLocation.x, cursorLocation.y);
+        return false;
     }
 
     public static void drawCanvas(int width, float[][] colourList) {
@@ -51,7 +37,7 @@ public class HueBar extends AbstractHue {
 
     @Override
     public void drawCanvas() {
-        drawCanvas(this.getClientArea().width, this.colourList);
+        drawCanvas(this.getClientArea().width, colourList);
     }
 
     @Override
