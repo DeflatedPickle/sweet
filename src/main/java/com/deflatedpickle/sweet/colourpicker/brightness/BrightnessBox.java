@@ -1,5 +1,6 @@
 package com.deflatedpickle.sweet.colourpicker.brightness;
 
+import com.deflatedpickle.sweet.colourpicker.hue.AbstractHue;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
@@ -26,8 +27,7 @@ public class BrightnessBox extends AbstractBrightness {
         return newLocation.contains(cursorLocation.x, cursorLocation.y);
     }
 
-    @Override
-    public void drawCanvas() {
+    public static void drawCanvas(AbstractHue hue, float red, float green, float blue) {
         if (hue != null) {
             red = hue.red;
             green = hue.green;
@@ -44,6 +44,11 @@ public class BrightnessBox extends AbstractBrightness {
         GL11.glColor3f(1.0f, 1.0f, 1.0f);
         GL11.glVertex2i(-1, 1);
         GL11.glEnd();
+    }
+
+    @Override
+    public void drawCanvas() {
+        drawCanvas(this.hue, this.red, this.green, this.blue);
     }
 
     @Override

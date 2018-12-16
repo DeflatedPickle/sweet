@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Composite;
 public abstract class AbstractHue extends AbstractCanvasHandle {
     public AbstractBrightness brightness;
 
-    Float[][] colourList = {
+    public static float[][] colourList = {
             {1f, 0f, 0f},
             {1f, 0f, 1f},
             {0f, 0f, 1f},

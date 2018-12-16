@@ -16,9 +16,8 @@ public class HueWheel extends AbstractHue {
         this.saw = saw;
     }
 
-    @Override
-    public void drawCanvas() {
-        if (this.hollow) {
+    public static void drawCanvas(int segments, float[][] colourList, boolean saw, boolean hollow) {
+        if (hollow) {
             GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
         }
         else {
@@ -28,23 +27,28 @@ public class HueWheel extends AbstractHue {
         GL11.glColor3f(1.0f, 1.0f, 1.0f);
         GL11.glVertex2f(0f, 0f);
 
-        for (int i = 0; i < this.segments + 1; i++) {
-            this.drawPoint(i);
+        for (int i = 0; i < segments + 1; i++) {
+            drawPoint(i, segments, colourList, saw, hollow);
         }
 
         GL11.glEnd();
     }
 
-    private void drawPoint(int i) {
-        if (this.segments < this.colourList.length + 1) {
-            this.changeColour(i);
+    @Override
+    public void drawCanvas() {
+        drawCanvas(this.segments, this.colourList, this.saw, this.hollow);
+    }
+
+    private static void drawPoint(int i, int segments, float[][] colourList, boolean saw, boolean hollow) {
+        if (segments < colourList.length + 1) {
+            changeColour(i, colourList);
         }
         else {
-            if (this.segments % this.colourList.length == 0) {
+            if (segments % colourList.length == 0) {
                 // This, somehow, works out how many times the index needs to be repeated for the circle
                 // FIXME: Anything divisible by 6 above 12 doesn't interpolate well -- fix this
-                int index = ((i * (this.segments / this.colourList.length)) / (this.segments / 3)) / (this.segments / 12);
-                this.changeColour(index);
+                int index = ((i * (segments / colourList.length)) / (segments / 3)) / (segments / 12);
+                changeColour(index, colourList);
             }
             else {
                 GL11.glColor3f(0f, 0f, 0f);
@@ -52,15 +56,15 @@ public class HueWheel extends AbstractHue {
         }
 
         // Draw the vertex
-        if (this.saw || this.hollow) {
-            GL11.glVertex2f(0.8f * (float) Math.cos(i * (2f * Math.PI) / this.segments), 0.8f * (float) Math.sin(i * (2f * Math.PI) / this.segments));
+        if (saw || hollow) {
+            GL11.glVertex2f(0.8f * (float) Math.cos(i * (2f * Math.PI) / segments), 0.8f * (float) Math.sin(i * (2f * Math.PI) / segments));
         }
 
-        GL11.glVertex2f((float) Math.cos(i * (2f * Math.PI) / this.segments), (float) Math.sin(i * (2f * Math.PI) / this.segments));
+        GL11.glVertex2f((float) Math.cos(i * (2f * Math.PI) / segments), (float) Math.sin(i * (2f * Math.PI) / segments));
     }
 
-    private void changeColour(int i) {
-        if (i % 6 < this.colourList.length) {
+    private static void changeColour(int i, float[][] colourList) {
+        if (i % 6 < colourList.length) {
             GL11.glColor3f(colourList[i % 6][0], colourList[i % 6][1], colourList[i % 6][2]);
         }
     }

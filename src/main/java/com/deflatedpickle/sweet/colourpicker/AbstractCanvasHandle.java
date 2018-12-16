@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
-public class AbstractCanvasHandle extends ScalingGLCanvas {
+public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
     private float[] pointerLocation = new float[] {0, 0};
 
     private boolean isFirst = true;

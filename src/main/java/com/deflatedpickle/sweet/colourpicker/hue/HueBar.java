@@ -31,23 +31,27 @@ public class HueBar extends AbstractHue {
         return newLocation.contains(cursorLocation.x, cursorLocation.y);
     }
 
-    @Override
-    public void drawCanvas() {
-        GL11.glLineWidth(getClientArea().width);
+    public static void drawCanvas(int width, float[][] colourList) {
+        GL11.glLineWidth(width);
         GL11.glBegin(GL11.GL_LINE_STRIP);
 
         float[] elevationList = {1, 0.8f, 0.4f, 0.2f, 0.0f, -0.4f, -1};
         for (int i = 0; i < 7; i++) {
             if (i == 6) {
-                GL11.glColor3f(this.colourList[0][0], this.colourList[0][1], this.colourList[0][2]);
+                GL11.glColor3f(colourList[0][0], colourList[0][1], colourList[0][2]);
             }
             else {
-                GL11.glColor3f(this.colourList[i][0], this.colourList[i][1], this.colourList[i][2]);
+                GL11.glColor3f(colourList[i][0], colourList[i][1], colourList[i][2]);
             }
             GL11.glVertex2f(0, elevationList[i]);
         }
 
         GL11.glEnd();
+    }
+
+    @Override
+    public void drawCanvas() {
+        drawCanvas(this.getClientArea().width, this.colourList);
     }
 
     @Override
