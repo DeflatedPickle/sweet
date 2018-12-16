@@ -7,14 +7,17 @@ public class HueBar extends AbstractHue {
     public HueBar(Composite parent, int style) {
         super(parent, style);
 
-        pointerLocation = new float[]{0, -1.25f};
+        handleLocation = new float[]{0, -1.25f};
+        handleSize = new float[]{1f, 0.06f};
 
         this.red = 1f;
     }
 
     @Override
     public boolean isOverHandle() {
-        return false;
+        float[] cursorLocation = this.cursorToGL();
+
+        return (cursorLocation[1] - 0.3f > this.handleLocation[1] - this.handleSize[1] && cursorLocation[1] - 0.3f < this.handleLocation[1] + this.handleSize[1]);
     }
 
     public static void drawCanvas(int width, float[][] colourList) {
@@ -42,15 +45,16 @@ public class HueBar extends AbstractHue {
 
     @Override
     public void drawHandle() {
-        float scalingFixtureY = getClientArea().height / 180f;
+        // float scalingFixtureY = getClientArea().height / 180f;
+        float scalingFixtureY = 1;
 
         GL11.glLineWidth(1f);
         GL11.glBegin(GL11.GL_LINE_LOOP);
         GL11.glColor3i(1, 1, 1);
-        GL11.glVertex2f(pointerLocation[0] - 1f, -pointerLocation[1] - 0.35f / scalingFixtureY); // Bottom Left
-        GL11.glVertex2f(pointerLocation[0] + 1f, -pointerLocation[1] - 0.35f / scalingFixtureY); // Bottom Right
-        GL11.glVertex2f(pointerLocation[0] + 1f, -pointerLocation[1] - 0.25f / scalingFixtureY); // Top Right
-        GL11.glVertex2f(pointerLocation[0] - 1f, -pointerLocation[1] - 0.25f / scalingFixtureY); // Top Left
+        GL11.glVertex2f(-1f, -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Left
+        GL11.glVertex2f(1f, -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Right
+        GL11.glVertex2f(1f, -handleLocation[1] - 0.25f / scalingFixtureY); // Top Right
+        GL11.glVertex2f(-1f, -handleLocation[1] - 0.25f / scalingFixtureY); // Top Left
         GL11.glEnd();
     }
 }

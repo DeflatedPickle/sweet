@@ -8,12 +8,16 @@ public class BrightnessBox extends AbstractBrightness {
     public BrightnessBox(Composite parent, int style) {
         super(parent, style);
 
-        pointerLocation = new float[]{1f, -1.25f};
+        handleLocation = new float[]{1f, -1.25f};
+        handleSize = new float[]{0.05f, 0.05f};
     }
 
     @Override
     public boolean isOverHandle() {
-        return false;
+        float[] cursorLocation = this.cursorToGL();
+
+        return (cursorLocation[0] + 0.05f > this.handleLocation[0] - this.handleSize[0] && cursorLocation[0] + 0.05f < this.handleLocation[0] + this.handleSize[0])
+                && (cursorLocation[1] - 0.3f > this.handleLocation[1] - this.handleSize[1] && cursorLocation[1] - 0.3f < this.handleLocation[1] + this.handleSize[1]);
     }
 
     public static void drawCanvas(AbstractHue hue, float red, float green, float blue) {
@@ -42,15 +46,17 @@ public class BrightnessBox extends AbstractBrightness {
 
     @Override
     public void drawHandle() {
-        float scalingFixtureX = getClientArea().width / 180f;
-        float scalingFixtureY = getClientArea().height / 180f;
+        // float scalingFixtureX = getClientArea().width / 180f;
+        // float scalingFixtureY = getClientArea().height / 180f;
+        float scalingFixtureX = 1;
+        float scalingFixtureY = 1;
 
         GL11.glBegin(GL11.GL_LINE_LOOP);
         GL11.glColor3i(1, 1, 1);
-        GL11.glVertex2f(pointerLocation[0], -pointerLocation[1] - 0.35f / scalingFixtureY); // Bottom Left
-        GL11.glVertex2f(pointerLocation[0] + -0.09f / scalingFixtureX, -pointerLocation[1] - 0.35f / scalingFixtureY); // Bottom Right
-        GL11.glVertex2f(pointerLocation[0] + -0.09f / scalingFixtureX, -pointerLocation[1] - 0.25f / scalingFixtureY); // Top Right
-        GL11.glVertex2f(pointerLocation[0], -pointerLocation[1] - 0.25f / scalingFixtureY); // Top Left
+        GL11.glVertex2f(handleLocation[0], -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Left
+        GL11.glVertex2f(handleLocation[0] + -0.09f / scalingFixtureX, -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Right
+        GL11.glVertex2f(handleLocation[0] + -0.09f / scalingFixtureX, -handleLocation[1] - 0.25f / scalingFixtureY); // Top Right
+        GL11.glVertex2f(handleLocation[0], -handleLocation[1] - 0.25f / scalingFixtureY); // Top Left
         GL11.glEnd();
     }
 }

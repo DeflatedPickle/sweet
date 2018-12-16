@@ -12,12 +12,13 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
-    protected float[] pointerLocation = new float[]{0, 0};
-    protected float[] tempLoc = new float[2];
+    protected float[] handleLocation = new float[2];
+    protected float[] handleSize = new float[2];
+    private float[] tempLoc = new float[2];
 
     private boolean isFirst = true;
 
-    protected boolean followMouse = false;
+    private boolean followMouse = false;
 
     public float red;
     public float green;
@@ -58,8 +59,8 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
         this.addMouseMoveListener(e -> {
             moveHandle();
             if (this.followMouse) {
-                pointerLocation[0] = tempLoc[0];
-                pointerLocation[1] = tempLoc[1];
+                handleLocation[0] = tempLoc[0];
+                handleLocation[1] = tempLoc[1];
             }
 
             if (this.isOverHandle()) {
@@ -82,8 +83,8 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
 
                 moveHandle();
                 if (followMouse) {
-                    pointerLocation[0] = tempLoc[0];
-                    pointerLocation[1] = tempLoc[1];
+                    handleLocation[0] = tempLoc[0];
+                    handleLocation[1] = tempLoc[1];
                 }
             }
 
@@ -96,18 +97,22 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
 
     }
 
-    public boolean isOverHandle() {
+    protected boolean isOverHandle() {
         return false;
     }
 
-    private void moveHandle() {
+    protected float[] cursorToGL() {
         Rectangle clientArea = this.getClientArea();
 
         Point cursorLocation = Display.getCurrent().getFocusControl().toControl(Display.getCurrent().getCursorLocation());
-        float[] localLocation = this.convertDeviceCoords((float) cursorLocation.x, (float) cursorLocation.y, clientArea.width, clientArea.height);
+        return this.convertDeviceCoords((float) cursorLocation.x, (float) cursorLocation.y, clientArea.width, clientArea.height);
+    }
 
-        tempLoc[0] = pointerLocation[0];
-        tempLoc[1] = pointerLocation[1];
+    private void moveHandle() {
+        float[] localLocation = cursorToGL();
+
+        tempLoc[0] = handleLocation[0];
+        tempLoc[1] = handleLocation[1];
 
         if (localLocation[0] > -0.95f && localLocation[0] < 0.95f) {
             tempLoc[0] = localLocation[0] + 0.05f;
@@ -124,7 +129,7 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
     public void drawHandle() {
     }
 
-    protected float[] convertDeviceCoords(float x, float y, int width, int height) {
+    private float[] convertDeviceCoords(float x, float y, int width, int height) {
         return new float[]{(2f * x) / width - 1f, (2f * y) / height - 1f};
     }
 }
