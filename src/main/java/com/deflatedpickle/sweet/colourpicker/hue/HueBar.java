@@ -9,8 +9,6 @@ public class HueBar extends AbstractHue {
 
         handleLocation = new float[]{0, -1.25f};
         handleSize = new float[]{1f, 0.06f};
-
-        this.red = 1f;
     }
 
     @Override

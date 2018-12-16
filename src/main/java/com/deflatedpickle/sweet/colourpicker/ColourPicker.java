@@ -205,6 +205,8 @@ public class ColourPicker extends Composite {
         brightness.hue = hue;
         brightness.setLayoutData(brightnessGridData);
 
+        hue.brightness = brightness;
+
         hue.setLayoutData(hueGridData);
     }
 

@@ -39,16 +39,17 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
                 if (!canvas.isDisposed()) {
                     canvas.setCurrent();
 
-                    if (isFirst) {
-                        isFirst = false;
-                        resize();
-                    }
-
                     GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
                     drawCanvas();
 
                     drawHandle();
+
+                    if (isFirst) {
+                        isFirst = false;
+                        resize();
+                        setColour();
+                    }
 
                     canvas.swapBuffers();
                     getDisplay().asyncExec(this);
@@ -69,6 +70,10 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
             else {
                 this.setCursor(new Cursor(this.getDisplay(), SWT.CURSOR_ARROW));
             }
+
+            if (followMouse) {
+                this.setColour();
+            }
         });
 
         this.addMouseListener(new MouseListener() {
@@ -85,6 +90,8 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
                 if (followMouse) {
                     handleLocation[0] = tempLoc[0];
                     handleLocation[1] = tempLoc[1];
+
+                    setColour();
                 }
             }
 
@@ -94,18 +101,41 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
                 followMouse = false;
             }
         });
-
     }
 
     protected boolean isOverHandle() {
         return false;
     }
 
+    private float[] getSelectedColour() {
+        float[] colours = new float[3];
+
+        float[] handleLoc = this.GLToDevice(this.handleLocation[0], this.handleLocation[1], this.getClientArea().width, this.getClientArea().height);
+
+        GL11.glReadPixels((int) handleLoc[0], (int) handleLoc[1] - (int) (this.getClientArea().height / 5.5f), 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, colours);
+
+        return colours;
+    }
+
+    private void setColour() {
+        float[] colour = getSelectedColour();
+
+        if ((int) colour[0] == (int) colour[1]
+                && (int) colour[0] == (int) colour[2]
+                && (int) colour[1] == (int) colour[2]) {
+            return;
+        }
+
+        this.red = colour[0];
+        this.green = colour[1];
+        this.blue = colour[2];
+    }
+
     protected float[] cursorToGL() {
         Rectangle clientArea = this.getClientArea();
 
         Point cursorLocation = Display.getCurrent().getFocusControl().toControl(Display.getCurrent().getCursorLocation());
-        return this.convertDeviceCoords((float) cursorLocation.x, (float) cursorLocation.y, clientArea.width, clientArea.height);
+        return this.deviceToGL((float) cursorLocation.x, (float) cursorLocation.y, clientArea.width, clientArea.height);
     }
 
     private void moveHandle() {
@@ -129,7 +159,11 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
     public void drawHandle() {
     }
 
-    private float[] convertDeviceCoords(float x, float y, int width, int height) {
+    private float[] deviceToGL(float x, float y, int width, int height) {
         return new float[]{(2f * x) / width - 1f, (2f * y) / height - 1f};
+    }
+
+    private float[] GLToDevice(float x, float y, int width, int height) {
+        return new float[]{((x + 1f) / 2f) * width, ((1f - y) / 2f) * height};
     }
 }
