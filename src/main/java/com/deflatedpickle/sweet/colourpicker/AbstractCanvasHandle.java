@@ -15,9 +15,9 @@ public class AbstractCanvasHandle extends ScalingGLCanvas {
 
     private boolean followMouse = false;
 
-    float red;
-    float green;
-    float blue;
+    public float red;
+    public float green;
+    public float blue;
 
     public AbstractCanvasHandle(Composite parent, int style) {
         super(parent, style);

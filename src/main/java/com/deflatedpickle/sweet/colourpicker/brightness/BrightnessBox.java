@@ -1,4 +1,4 @@
-package com.deflatedpickle.sweet.colourpicker;
+package com.deflatedpickle.sweet.colourpicker.brightness;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -28,13 +28,11 @@ public class BrightnessBox extends AbstractBrightness {
 
     @Override
     public void drawCanvas() {
-        if (hueBar != null) {
-            red = hueBar.red;
-            green = hueBar.green;
-            blue = hueBar.blue;
+        if (hue != null) {
+            red = hue.red;
+            green = hue.green;
+            blue = hue.blue;
         }
-
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
         GL11.glBegin(GL11.GL_POLYGON);
         GL11.glColor3f(0.0f, 0.0f, 0.0f);

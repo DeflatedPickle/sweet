@@ -1,4 +1,4 @@
-package com.deflatedpickle.sweet.colourpicker;
+package com.deflatedpickle.sweet.colourpicker.hue;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -6,10 +6,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HueBar extends AbstractHue {
     // Bottom = 0.65f | Top = -1.25f (OpenGL)
     // Bottom = 180   | Top = 0      (Canvas)
-    private float[] pointerLocation = new float[] {0, -1.25f};
+    private float[] pointerLocation = new float[]{0, -1.25f};
 
     public HueBar(Composite parent, int style) {
         super(parent, style);
