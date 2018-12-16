@@ -27,7 +27,9 @@ public class ColourPicker extends Composite {
     public enum HueShape {
         BAR,
         HEXAGON,
-        CIRCLE
+        CIRCLE,
+        SAW,
+        WHEEL
     }
 
     public ColourPicker(Composite parent, int style, BrightnessShape brightnessShape, HueShape hueShape) {
@@ -52,6 +54,14 @@ public class ColourPicker extends Composite {
                 brightnessGridData.heightHint = 180;
                 break;
 
+            case ISOSCELES_TRIANGLE:
+                brightness = new BrightnessTriangle(this, SWT.BORDER, BrightnessTriangle.Location.CENTRE);
+
+                brightnessGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+                brightnessGridData.widthHint = 180;
+                brightnessGridData.heightHint = 180;
+                break;
+
             default:
                 brightnessGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
                 break;
@@ -68,7 +78,7 @@ public class ColourPicker extends Composite {
                 break;
 
             case HEXAGON:
-                hue = new HueWheel(this, SWT.BORDER, 6);
+                hue = new HueWheel(this, SWT.BORDER, 6, false, false);
 
                 hueGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
                 hueGridData.widthHint = 180;
@@ -76,7 +86,23 @@ public class ColourPicker extends Composite {
                 break;
 
             case CIRCLE:
-                hue = new HueWheel(this, SWT.BORDER, 12);
+                hue = new HueWheel(this, SWT.BORDER, 12, false, false);
+
+                hueGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+                hueGridData.widthHint = 180;
+                hueGridData.heightHint = 180;
+                break;
+
+            case SAW:
+                hue = new HueWheel(this, SWT.BORDER, 24, false, true);
+
+                hueGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+                hueGridData.widthHint = 180;
+                hueGridData.heightHint = 180;
+                break;
+
+            case WHEEL:
+                hue = new HueWheel(this, SWT.BORDER, 24, true, false);
 
                 hueGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
                 hueGridData.widthHint = 180;
@@ -99,7 +125,7 @@ public class ColourPicker extends Composite {
         Shell shell = new Shell(display);
         shell.setLayout(new FillLayout());
 
-        ColourPicker colourPicker = new ColourPicker(shell, SWT.NONE, BrightnessShape.RIGHT_ANGLE_TRIANGLE, HueShape.CIRCLE);
+        ColourPicker colourPicker = new ColourPicker(shell, SWT.NONE, BrightnessShape.ISOSCELES_TRIANGLE, HueShape.WHEEL);
         colourPicker.pack();
 
         shell.pack();

@@ -5,16 +5,25 @@ import org.lwjgl.opengl.GL11;
 
 public class HueWheel extends AbstractHue {
     private int segments;
+    private boolean hollow;
+    private boolean saw;
 
-    public HueWheel(Composite parent, int style, int segments) {
+    public HueWheel(Composite parent, int style, int segments, boolean hollow, boolean saw) {
         super(parent, style);
 
         this.segments = segments;
+        this.hollow = hollow;
+        this.saw = saw;
     }
 
     @Override
     public void drawCanvas() {
-        GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+        if (this.hollow) {
+            GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
+        }
+        else {
+            GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+        }
 
         GL11.glColor3f(1.0f, 1.0f, 1.0f);
         GL11.glVertex2f(0f, 0f);
@@ -43,6 +52,10 @@ public class HueWheel extends AbstractHue {
         }
 
         // Draw the vertex
+        if (this.saw || this.hollow) {
+            GL11.glVertex2f(0.8f * (float) Math.cos(i * (2f * Math.PI) / this.segments), 0.8f * (float) Math.sin(i * (2f * Math.PI) / this.segments));
+        }
+
         GL11.glVertex2f((float) Math.cos(i * (2f * Math.PI) / this.segments), (float) Math.sin(i * (2f * Math.PI) / this.segments));
     }
 

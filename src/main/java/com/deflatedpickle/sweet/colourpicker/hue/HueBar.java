@@ -33,31 +33,19 @@ public class HueBar extends AbstractHue {
 
     @Override
     public void drawCanvas() {
-        float flo = 0f;
-
         GL11.glLineWidth(getClientArea().width);
         GL11.glBegin(GL11.GL_LINE_STRIP);
 
-        GL11.glColor3f(1.0f, 0.0f, 0.0f); // Red
-        GL11.glVertex2f(flo, 1); // Top Left
-
-        GL11.glColor3f(1.0f, 0.0f, 1.0f); // Purple
-        GL11.glVertex2f(flo, 0.8f);
-
-        GL11.glColor3f(0.0f, 0.0f, 1.0f); // Blue
-        GL11.glVertex2f(flo, 0.4f);
-
-        GL11.glColor3f(0.0f, 1.0f, 1.0f); // Cyan
-        GL11.glVertex2f(flo, 0.2f);
-
-        GL11.glColor3f(0.0f, 1.0f, 0.0f); // Green
-        GL11.glVertex2f(flo, -0.0f);
-
-        GL11.glColor3f(1.0f, 1.0f, 0.0f); // Yellow
-        GL11.glVertex2f(flo, -0.4f);
-
-        GL11.glColor3f(1.0f, 0.0f, 0.0f); // Red
-        GL11.glVertex2f(flo, -1f); // Bottom Left
+        float[] elevationList = {1, 0.8f, 0.4f, 0.2f, 0.0f, -0.4f, -1};
+        for (int i = 0; i < 7; i++) {
+            if (i == 6) {
+                GL11.glColor3f(this.colourList[0][0], this.colourList[0][1], this.colourList[0][2]);
+            }
+            else {
+                GL11.glColor3f(this.colourList[i][0], this.colourList[i][1], this.colourList[i][2]);
+            }
+            GL11.glVertex2f(0, elevationList[i]);
+        }
 
         GL11.glEnd();
     }
