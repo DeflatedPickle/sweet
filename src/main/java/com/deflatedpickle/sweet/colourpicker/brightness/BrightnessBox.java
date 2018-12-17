@@ -21,18 +21,12 @@ public class BrightnessBox extends AbstractBrightness {
     }
 
     public static void drawCanvas(AbstractHue hue, float red, float green, float blue) {
-        if (hue != null) {
-            red = hue.red;
-            green = hue.green;
-            blue = hue.blue;
-        }
-
         GL11.glBegin(GL11.GL_POLYGON);
         GL11.glColor3f(0.0f, 0.0f, 0.0f);
         GL11.glVertex2i(-1, -1);
         GL11.glColor3f(0.0f, 0.0f, 0.0f);
         GL11.glVertex2i(1, -1);
-        GL11.glColor3f(red, green, blue);
+        GL11.glColor3f(hue.red, hue.green, hue.blue);
         GL11.glVertex2i(1, 1);
         GL11.glColor3f(1.0f, 1.0f, 1.0f);
         GL11.glVertex2i(-1, 1);
@@ -52,7 +46,8 @@ public class BrightnessBox extends AbstractBrightness {
         float scalingFixtureY = 1;
 
         GL11.glBegin(GL11.GL_LINE_LOOP);
-        GL11.glColor3i(1, 1, 1);
+        // GL11.glColor3i(1, 1, 1);
+        this.invertHandleColour();
         GL11.glVertex2f(handleLocation[0], -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Left
         GL11.glVertex2f(handleLocation[0] + -0.09f / scalingFixtureX, -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Right
         GL11.glVertex2f(handleLocation[0] + -0.09f / scalingFixtureX, -handleLocation[1] - 0.25f / scalingFixtureY); // Top Right

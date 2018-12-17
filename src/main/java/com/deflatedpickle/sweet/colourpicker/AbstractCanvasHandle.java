@@ -1,15 +1,17 @@
 package com.deflatedpickle.sweet.colourpicker;
 
+import com.deflatedpickle.sweet.colourpicker.brightness.AbstractBrightness;
+import com.deflatedpickle.sweet.colourpicker.hue.AbstractHue;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+
+import java.util.Arrays;
 
 public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
     protected float[] handleLocation = new float[2];
@@ -83,7 +85,6 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
 
             @Override
             public void mouseDown(MouseEvent e) {
-                // TODO: Make the slider follow the mouse
                 followMouse = true;
 
                 moveHandle();
@@ -112,18 +113,39 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
 
         float[] handleLoc = this.GLToDevice(this.handleLocation[0], this.handleLocation[1], this.getClientArea().width, this.getClientArea().height);
 
-        GL11.glReadPixels((int) handleLoc[0], (int) handleLoc[1] - (int) (this.getClientArea().height / 5.5f), 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, colours);
+        if (this instanceof AbstractBrightness) {
+            GL11.glReadPixels(Math.min((int) handleLoc[0] - (int) (this.getClientArea().width / 5.5f) + 44, this.getClientArea().width - 22), (int) handleLoc[1] - (int) (this.getClientArea().height / 5.5f), 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, colours);
+        }
+        else if (this instanceof AbstractHue) {
+            GL11.glReadPixels((int) handleLoc[0] - (int) (this.getClientArea().width / 5.5f), (int) handleLoc[1] - (int) (this.getClientArea().height / 5.5f), 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, colours);
+
+            ((AbstractHue) this).brightness.setColour();
+        }
 
         return colours;
     }
 
-    private void setColour() {
+    protected void setColour() {
         float[] colour = getSelectedColour();
 
-        if ((int) colour[0] == (int) colour[1]
-                && (int) colour[0] == (int) colour[2]
-                && (int) colour[1] == (int) colour[2]) {
-            return;
+        if (this instanceof AbstractBrightness) {
+            if (colour[0] == 0
+                    && colour[1] == 0
+                    && colour[2] == 0) {
+                return;
+            }
+            if (colour[0] == 1
+                    && colour[1] == 1
+                    && colour[2] == 1) {
+                return;
+            }
+        }
+        else if (this instanceof AbstractHue) {
+            if ((int) colour[0] == (int) colour[1]
+                    && (int) colour[0] == (int) colour[2]
+                    && (int) colour[1] == (int) colour[2]) {
+                return;
+            }
         }
 
         this.red = colour[0];
@@ -134,6 +156,7 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
     protected float[] cursorToGL() {
         Rectangle clientArea = this.getClientArea();
 
+        if (Display.getCurrent().getFocusControl() == null) return new float[]{0, 0};
         Point cursorLocation = Display.getCurrent().getFocusControl().toControl(Display.getCurrent().getCursorLocation());
         return this.deviceToGL((float) cursorLocation.x, (float) cursorLocation.y, clientArea.width, clientArea.height);
     }
@@ -165,5 +188,16 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
 
     private float[] GLToDevice(float x, float y, int width, int height) {
         return new float[]{((x + 1f) / 2f) * width, ((1f - y) / 2f) * height};
+    }
+
+    protected void invertHandleColour() {
+        float yiq = (((this.red * 255) * 299) + ((this.green * 255) * 587) + ((this.blue * 255) * 114)) / 1000;
+
+        if (yiq >= 128f) {
+            GL11.glColor3f(0, 0, 0);
+        }
+        else {
+            GL11.glColor3f(1, 1, 1);
+        }
     }
 }

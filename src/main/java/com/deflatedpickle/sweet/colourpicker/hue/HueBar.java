@@ -48,7 +48,8 @@ public class HueBar extends AbstractHue {
 
         GL11.glLineWidth(1f);
         GL11.glBegin(GL11.GL_LINE_LOOP);
-        GL11.glColor3i(1, 1, 1);
+        // GL11.glColor3i(1, 1, 1);
+        this.invertHandleColour();
         GL11.glVertex2f(-1f, -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Left
         GL11.glVertex2f(1f, -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Right
         GL11.glVertex2f(1f, -handleLocation[1] - 0.25f / scalingFixtureY); // Top Right
