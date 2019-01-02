@@ -23,7 +23,7 @@ public class HueBar extends AbstractHue {
         GL11.glBegin(GL11.GL_LINE_STRIP);
 
         float[] elevationList = {1, 0.8f, 0.4f, 0.2f, 0.0f, -0.4f, -1};
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i <= 6; i++) {
             if (i == 6) {
                 GL11.glColor3f(colourList[0][0], colourList[0][1], colourList[0][2]);
             }

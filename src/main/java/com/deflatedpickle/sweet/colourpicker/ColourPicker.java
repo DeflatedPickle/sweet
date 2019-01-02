@@ -49,12 +49,32 @@ public class ColourPicker extends Composite {
             GridData combinedGridData;
             combineCanvas = new AbstractCanvasHandle(this, SWT.BORDER) {
                 @Override
-                public boolean isOverHandle() {
-                    return super.isOverHandle();
-                }
-
-                @Override
                 public void drawCanvas() {
+
+                    GL11.glPushMatrix();
+                    switch (hueShape) {
+                        case BAR:
+                            HueBar.drawCanvas(20, AbstractHue.colourList);
+                            break;
+
+                        case HEXAGON:
+                            HueWheel.drawCanvas(6, AbstractHue.colourList, false, false);
+                            break;
+
+                        case CIRCLE:
+                            HueWheel.drawCanvas(24, AbstractHue.colourList, false, false);
+                            break;
+
+                        case SAW:
+                            HueWheel.drawCanvas(24, AbstractHue.colourList, true, false);
+                            break;
+
+                        case WHEEL:
+                            HueWheel.drawCanvas(72, AbstractHue.colourList, false, true);
+                            break;
+                    }
+                    GL11.glPopMatrix();
+
                     GL11.glPushMatrix();
                     float scale;
 
@@ -80,35 +100,6 @@ public class ColourPicker extends Composite {
                             break;
                     }
                     GL11.glPopMatrix();
-
-                    GL11.glPushMatrix();
-                    switch (hueShape) {
-                        case BAR:
-                            HueBar.drawCanvas(20, AbstractHue.colourList);
-                            break;
-
-                        case HEXAGON:
-                            HueWheel.drawCanvas(6, AbstractHue.colourList, false, false);
-                            break;
-
-                        case CIRCLE:
-                            HueWheel.drawCanvas(24, AbstractHue.colourList, false, false);
-                            break;
-
-                        case SAW:
-                            HueWheel.drawCanvas(24, AbstractHue.colourList, true, false);
-                            break;
-
-                        case WHEEL:
-                            HueWheel.drawCanvas(72, AbstractHue.colourList, false, true);
-                            break;
-                    }
-                    GL11.glPopMatrix();
-                }
-
-                @Override
-                public void drawHandle() {
-                    super.drawHandle();
                 }
             };
 
