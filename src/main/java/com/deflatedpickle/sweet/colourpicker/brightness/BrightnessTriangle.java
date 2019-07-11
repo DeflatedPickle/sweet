@@ -14,7 +14,8 @@ public class BrightnessTriangle extends AbstractBrightness {
         this.red = 1f;
     }
 
-    public static void drawCanvas(ColourPicker.Location tipLocation, float red, float green, float blue) {
+    @Override
+    public void drawCanvas() {
         GL11.glBegin(GL11.GL_POLYGON);
         GL11.glColor3f(0.0f, 0.0f, 0.0f);
         GL11.glVertex2i(-1, -1); // Bottom
@@ -54,10 +55,5 @@ public class BrightnessTriangle extends AbstractBrightness {
         GL11.glVertex2f(colourPoint[1][0], colourPoint[1][1]); // Top Left
 
         GL11.glEnd();
-    }
-
-    @Override
-    public void drawCanvas() {
-        drawCanvas(this.tipLocation, this.red, this.green, this.blue);
     }
 }

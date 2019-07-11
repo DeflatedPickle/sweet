@@ -1,4 +1,4 @@
-package com.deflatedpickle.sweet.colourpicker;
+package com.deflatedpickle.sweet;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
@@ -7,15 +7,15 @@ import org.eclipse.swt.opengl.GLData;
 import org.eclipse.swt.widgets.Composite;
 import org.lwjgl.opengl.GL11;
 
-abstract class ScalingGLCanvas extends GLCanvas {
-    ScalingGLCanvas canvas = this;
+public abstract class ScalingGLCanvas extends GLCanvas {
+    public ScalingGLCanvas canvas = this;
     private static GLData glData = new GLData();
 
     public ScalingGLCanvas(Composite parent, int style) {
-        super(parent, style | SWT.NO_REDRAW_RESIZE, glData);
+        super(parent, style, glData);
     }
 
-    void resize() {
+    public void resize() {
         this.setCurrent();
 
         Rectangle area = this.getClientArea();

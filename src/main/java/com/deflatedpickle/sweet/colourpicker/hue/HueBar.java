@@ -18,8 +18,9 @@ public class HueBar extends AbstractHue {
         return (cursorLocation[1] - 0.3f > this.handleLocation[1] - this.handleSize[1] && cursorLocation[1] - 0.3f < this.handleLocation[1] + this.handleSize[1]);
     }
 
-    public static void drawCanvas(int width, float[][] colourList) {
-        GL11.glLineWidth(width);
+    @Override
+    public void drawCanvas() {
+        GL11.glLineWidth(this.getClientArea().width);
         GL11.glBegin(GL11.GL_LINE_STRIP);
 
         float[] elevationList = {1, 0.8f, 0.4f, 0.2f, 0.0f, -0.4f, -1};
@@ -34,11 +35,6 @@ public class HueBar extends AbstractHue {
         }
 
         GL11.glEnd();
-    }
-
-    @Override
-    public void drawCanvas() {
-        drawCanvas(this.getClientArea().width, colourList);
     }
 
     @Override

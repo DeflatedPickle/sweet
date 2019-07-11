@@ -1,5 +1,6 @@
 package com.deflatedpickle.sweet.colourpicker;
 
+import com.deflatedpickle.sweet.ScalingGLCanvas;
 import com.deflatedpickle.sweet.colourpicker.brightness.AbstractBrightness;
 import com.deflatedpickle.sweet.colourpicker.hue.AbstractHue;
 import org.eclipse.swt.SWT;
@@ -21,6 +22,9 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
     private boolean isFirst = true;
 
     private boolean followMouse = false;
+
+    protected Path path = new Path(getDisplay());
+    private GC gc = new GC(getDisplay());
 
     public float red;
     public float green;
@@ -156,8 +160,7 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
     protected float[] cursorToGL() {
         Rectangle clientArea = this.getClientArea();
 
-        if (Display.getCurrent().getFocusControl() == null) return new float[]{0, 0};
-        Point cursorLocation = Display.getCurrent().getFocusControl().toControl(Display.getCurrent().getCursorLocation());
+        Point cursorLocation = this.toControl(Display.getCurrent().getCursorLocation());
         return this.deviceToGL((float) cursorLocation.x, (float) cursorLocation.y, clientArea.width, clientArea.height);
     }
 
@@ -167,12 +170,14 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
         tempLoc[0] = handleLocation[0];
         tempLoc[1] = handleLocation[1];
 
-        if (localLocation[0] > -0.95f && localLocation[0] < 0.95f) {
+        if (path.contains(localLocation[0], localLocation[1], gc, false)) {
+            // if (localLocation[0] > -0.95f && localLocation[0] < 0.95f) {
             tempLoc[0] = localLocation[0] + 0.05f;
-        }
+            // }
 
-        if (localLocation[1] > -0.95f && localLocation[1] < 0.95f) {
+            // if (localLocation[1] > -0.95f && localLocation[1] < 0.95f) {
             tempLoc[1] = localLocation[1] - 0.3f;
+            // }
         }
     }
 
@@ -182,11 +187,24 @@ public abstract class AbstractCanvasHandle extends ScalingGLCanvas {
     public void drawHandle() {
     }
 
-    private float[] deviceToGL(float x, float y, int width, int height) {
+    public void boundingBox() {
+    }
+
+    @Override
+    public void resize() {
+        super.resize();
+
+        path.dispose();
+        path = new Path(getDisplay());
+
+        boundingBox();
+    }
+
+    protected float[] deviceToGL(float x, float y, int width, int height) {
         return new float[]{(2f * x) / width - 1f, (2f * y) / height - 1f};
     }
 
-    private float[] GLToDevice(float x, float y, int width, int height) {
+    protected float[] GLToDevice(float x, float y, int width, int height) {
         return new float[]{((x + 1f) / 2f) * width, ((1f - y) / 2f) * height};
     }
 
