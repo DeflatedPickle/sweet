@@ -125,8 +125,28 @@ public class ColourPicker extends Composite {
         brightness.setLayoutData(brightnessGridData);
 
         hue.brightness = brightness;
-
         hue.setLayoutData(hueGridData);
+    }
+
+    public static void squareHandle(AbstractCanvasHandle abstractCanvasHandle) {
+        GL11.glBegin(GL11.GL_LINE_LOOP);
+        abstractCanvasHandle.invertHandleColour();
+        GL11.glVertex2f(abstractCanvasHandle.handleLocation[0], -abstractCanvasHandle.handleLocation[1] - 0.35f); // Bottom Left
+        GL11.glVertex2f(abstractCanvasHandle.handleLocation[0] + -0.09f, -abstractCanvasHandle.handleLocation[1] - 0.35f); // Bottom Right
+        GL11.glVertex2f(abstractCanvasHandle.handleLocation[0] + -0.09f, -abstractCanvasHandle.handleLocation[1] - 0.25f); // Top Right
+        GL11.glVertex2f(abstractCanvasHandle.handleLocation[0], -abstractCanvasHandle.handleLocation[1] - 0.25f); // Top Left
+        GL11.glEnd();
+    }
+
+    public static void barHandle(AbstractCanvasHandle abstractCanvasHandle) {
+        GL11.glLineWidth(1f);
+        GL11.glBegin(GL11.GL_LINE_LOOP);
+        abstractCanvasHandle.invertHandleColour();
+        GL11.glVertex2f(-1f, -abstractCanvasHandle.handleLocation[1] - 0.35f); // Bottom Left
+        GL11.glVertex2f(1f, -abstractCanvasHandle.handleLocation[1] - 0.35f); // Bottom Right
+        GL11.glVertex2f(1f, -abstractCanvasHandle.handleLocation[1] - 0.25f); // Top Right
+        GL11.glVertex2f(-1f, -abstractCanvasHandle.handleLocation[1] - 0.25f); // Top Left
+        GL11.glEnd();
     }
 
     public static void main(String[] args) {
@@ -134,7 +154,7 @@ public class ColourPicker extends Composite {
         Shell shell = new Shell(display);
         shell.setLayout(new FillLayout());
 
-        ColourPicker colourPicker = new ColourPicker(shell, SWT.NONE, BrightnessShape.BOX, HueShape.CIRCLE);
+        ColourPicker colourPicker = new ColourPicker(shell, SWT.NONE, BrightnessShape.BOX, HueShape.BAR);
         colourPicker.pack();
 
         shell.pack();

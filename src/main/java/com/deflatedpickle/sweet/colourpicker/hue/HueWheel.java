@@ -1,5 +1,6 @@
 package com.deflatedpickle.sweet.colourpicker.hue;
 
+import com.deflatedpickle.sweet.colourpicker.ColourPicker;
 import org.eclipse.swt.widgets.Composite;
 import org.lwjgl.opengl.GL11;
 
@@ -18,6 +19,7 @@ public class HueWheel extends AbstractHue {
         this.innerCircleSize = innerCircleSize;
     }
 
+    @Override
     public void drawCanvas() {
         if (hollow) {
             GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
@@ -65,5 +67,15 @@ public class HueWheel extends AbstractHue {
         if (i % 6 < colourList.length) {
             GL11.glColor3f(colourList[i % 6][0], colourList[i % 6][1], colourList[i % 6][2]);
         }
+    }
+
+    @Override
+    public void drawHandle() {
+        ColourPicker.squareHandle(this);
+    }
+
+    @Override
+    public void boundingBox() {
+        path.addRectangle(-0.5f, -0.5f, 1.5f, 1.5f);
     }
 }

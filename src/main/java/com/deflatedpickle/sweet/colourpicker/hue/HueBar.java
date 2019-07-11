@@ -1,7 +1,11 @@
 package com.deflatedpickle.sweet.colourpicker.hue;
 
+import com.deflatedpickle.sweet.colourpicker.ColourPicker;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.lwjgl.opengl.GL11;
+
+import java.util.Arrays;
 
 public class HueBar extends AbstractHue {
     public HueBar(Composite parent, int style) {
@@ -39,17 +43,11 @@ public class HueBar extends AbstractHue {
 
     @Override
     public void drawHandle() {
-        // float scalingFixtureY = getClientArea().height / 180f;
-        float scalingFixtureY = 1;
+        ColourPicker.barHandle(this);
+    }
 
-        GL11.glLineWidth(1f);
-        GL11.glBegin(GL11.GL_LINE_LOOP);
-        // GL11.glColor3i(1, 1, 1);
-        this.invertHandleColour();
-        GL11.glVertex2f(-1f, -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Left
-        GL11.glVertex2f(1f, -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Right
-        GL11.glVertex2f(1f, -handleLocation[1] - 0.25f / scalingFixtureY); // Top Right
-        GL11.glVertex2f(-1f, -handleLocation[1] - 0.25f / scalingFixtureY); // Top Left
-        GL11.glEnd();
+    @Override
+    public void boundingBox() {
+        path.addRectangle(-0.5f, -0.5f, 1.5f, 1.5f);
     }
 }

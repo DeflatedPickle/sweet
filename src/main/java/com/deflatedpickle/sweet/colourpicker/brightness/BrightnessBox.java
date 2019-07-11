@@ -1,5 +1,6 @@
 package com.deflatedpickle.sweet.colourpicker.brightness;
 
+import com.deflatedpickle.sweet.colourpicker.ColourPicker;
 import com.deflatedpickle.sweet.colourpicker.hue.AbstractHue;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.Point;
@@ -40,29 +41,11 @@ public class BrightnessBox extends AbstractBrightness {
 
     @Override
     public void drawHandle() {
-        // float scalingFixtureX = getClientArea().width / 180f;
-        // float scalingFixtureY = getClientArea().height / 180f;
-        float scalingFixtureX = 1;
-        float scalingFixtureY = 1;
-
-        GL11.glBegin(GL11.GL_LINE_LOOP);
-        // GL11.glColor3i(1, 1, 1);
-        this.invertHandleColour();
-        GL11.glVertex2f(handleLocation[0], -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Left
-        GL11.glVertex2f(handleLocation[0] + -0.09f / scalingFixtureX, -handleLocation[1] - 0.35f / scalingFixtureY); // Bottom Right
-        GL11.glVertex2f(handleLocation[0] + -0.09f / scalingFixtureX, -handleLocation[1] - 0.25f / scalingFixtureY); // Top Right
-        GL11.glVertex2f(handleLocation[0], -handleLocation[1] - 0.25f / scalingFixtureY); // Top Left
-        GL11.glEnd();
+        ColourPicker.squareHandle(this);
     }
 
     @Override
     public void boundingBox() {
-        super.boundingBox();
-
-        Point location = this.getLocation();
-        Point size = this.getSize();
-        float[] newLocation = deviceToGL(location.x, location.y, size.x, size.y);
-        float[] newSize = deviceToGL(size.x, size.y, size.x, size.y);
-        path.addRectangle(newLocation[0], newLocation[1], newSize[0] * 2, newSize[1] * 2);
+        path.addRectangle(-0.5f, -0.5f, 1.5f, 1.5f);
     }
 }
